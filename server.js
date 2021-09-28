@@ -25,7 +25,7 @@ const create = async () => {
     app.get('/text-to-speech', async (req, res, next) => {
         try{
             const { key, region, phrase, file, voice } = req.query;
-            if (!region || !phrase) return res.status(404).send('Invalid query string');
+            if (!key || !region || !phrase) return res.status(404).send('Invalid query string');
             let fileName = null;
             
             // stream from file or memory

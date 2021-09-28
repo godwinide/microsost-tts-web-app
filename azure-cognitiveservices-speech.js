@@ -18,8 +18,7 @@ const textToSpeech = async (key, region, text, filename, voice)=> {
     // convert callback function to promise
     return new Promise((resolve, reject) => {
         
-        const speechConfig = sdk.SpeechConfig.fromSubscription("1c572d6aeb3a41dbaa2c8a36f0c97044", region);
-        // const speechConfig = sdk.SpeechConfig.fromSubscription(key, region);
+        const speechConfig = sdk.SpeechConfig.fromSubscription(key, region);
         speechConfig.speechSynthesisOutputFormat = 5; // mp3
         speechConfig.speechSynthesisVoiceName = voice;
         
