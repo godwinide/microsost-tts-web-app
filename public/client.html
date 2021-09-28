@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Text To Speech App</title>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css">
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+  <header>
+    <h3 class="text-center text-white">Gadg TTS Web App</h3>
+  </header>
+
+  <div class="container">
+    <div class="form row">
+      <div class="col-md-4">
+        <label for="exampleFormControlInput1" class="form-label">Your Speech Resource Key</label>
+        <input class="form-control" id="resourceKey" type="text" size="40" placeholder="Your resource key (32 characters)" value=""
+        >
+      </div>
+      <div class="col-md-4">
+        <label for="exampleFormControlInput1" class="form-label">Select Voice</label>
+        <select class="form-select" aria-label="Default select example">
+          <option value="en-AU-NatashaNeural">en-AU-NatashaNeural</option>
+              <option value="en-AU-WilliamNeural">en-AU-WilliamNeural</option>
+              <option value="en-CA-ClaraNeural">en-CA-ClaraNeural</option>
+              <option value="en-CA-LiamNeural">en-CA-LiamNeural</option>
+              <option value="en-HK-YanNeural New">en-HK-YanNeural New</option>
+              <option value="en-HK-SamNeural New">en-HK-SamNeural New</option>
+              <option value="en-IN-NeerjaNeural">en-IN-NeerjaNeural</option>
+              <option value="en-IN-PrabhatNeural">en-IN-PrabhatNeural</option>
+              <option value="en-IE-EmilyNeural">en-IE-EmilyNeural</option>
+              <option value="en-IE-ConnorNeural">en-IE-ConnorNeural</option>
+              <option value="en-NZ-MollyNeural New">en-NZ-MollyNeural New</option>
+              <option value="en-NZ-MitchellNeural New">en-NZ-MitchellNeural New</option>
+              <option value="en-PH-RosaNeural">en-PH-RosaNeural</option>
+              <option value="en-PH-JamesNeural">en-PH-JamesNeural</option>
+              <option value="en-SG-LunaNeural New">en-SG-LunaNeural New</option>
+              <option value="en-SG-WayneNeural New">en-SG-WayneNeural New</option>
+              <option value="en-ZA-LeahNeural New">en-ZA-LeahNeural New</option>
+              <option value="en-ZA-LukeNeural New">en-ZA-LukeNeural New</option>
+              <option value="en-GB-LibbyNeural">en-GB-LibbyNeural</option>
+              <option value="en-GB-SoniaNeural New">en-GB-SoniaNeural New</option>
+              <option value="en-GB-MiaNeural">en-GB-MiaNeural</option>
+              <option value="en-GB-RyanNeural">en-GB-RyanNeural</option>
+              <option value="en-US-AriaNeural">en-US-AriaNeural</option>
+              <option value="en-US-JennyNeural">en-US-JennyNeural</option>
+              <option value="en-US-GuyNeural">en-US-GuyNeural</option>
+              <option value="en-US-SaraNeural New">en-US-SaraNeural New</option>
+              <option value="en-US-AmberNeural">en-US-AmberNeural</option>
+              <option value="en-US-AshleyNeural">en-US-AshleyNeural</option>
+              <option value="en-US-CoraNeural">en-US-CoraNeural</option>
+              <option value="en-US-ElizabethNeural">en-US-ElizabethNeural</option>
+              <option value="en-US-MichelleNeural">en-US-MichelleNeural</option>
+              <option value="en-US-MonicaNeural">en-US-MonicaNeural</option>
+              <option value="en-US-AnaNeural">en-US-AnaNeural</option>
+              <option value="en-US-BrandonNeural">en-US-BrandonNeural</option>
+              <option value="en-US-ChristopherNeural">en-US-ChristopherNeural</option>
+              <option value="en-US-JacobNeural">en-US-JacobNeural</option>
+              <option value="en-US-EricNeural">en-US-EricNeural</option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label for="exampleFormControlInput1" class="form-label">Your Speech Resource Region</label>
+        <input class="form-control" id="resourceRegion" type="text" size="40" placeholder="Your resource region" value="eastus"
+        >
+      </div>
+      <div class="col-md-12 mt-4">
+        <label for="exampleFormControlTextarea1" class="form-label">Text</label>
+        <textarea class="form-control" id="phraseDiv" style="display: inline-block;width:100%;height:200px"
+        ></textarea>
+      </div>
+      <div class="col-md-6 mt-2 mb-2">
+        <button class="btn btn-success"
+        onclick="updateSrc()"
+        >Convert
+          <i class="fas fa-recycle"></i>
+        </button>
+      </div>
+      <hr>
+        <h4>Result</h4>
+        <audio id="serverAudioFile" controls preload="none" onerror="DisplayError()">
+        </audio>
+        <!-- <audio id="serverAudioStream" controls preload="none" onerror="DisplayError()">
+        </audio> -->
+    </div>
+  </div>
+
+  <!-- bootstrap -->
+  <script src="/js/bootstrap.bundle.min.js"></script>
+  <!-- Speech SDK reference sdk. -->
+  <script
+    src="https://cdn.jsdelivr.net/npm/microsoft-cognitiveservices-speech-sdk@latest/distrib/browser/microsoft.cognitiveservices.speech.sdk.bundle-min.js">
+    </script>
+
+  <!-- Speech SDK USAGE -->
+  <script>
+    // status fields and start button in UI
+    var phraseDiv;
+    var resultDiv;
+
+    // subscription key and region for speech services.
+    var resourceKey = null;
+    var resourceRegion = "eastus";
+    var authorizationToken;
+    var SpeechSDK;
+    var synthesizer;
+
+    var phrase = "all good men must come to the aid"
+    var queryString = null;
+
+    var audioType = "audio/mpeg";
+    var serverSrc = "/text-to-speech";
+
+    document.getElementById('serverAudioStream').disabled = true;
+    document.getElementById('serverAudioFile').disabled = true;
+    // document.getElementById('clientAudioAzure').disabled = true;
+
+    // update src URL query string for Express.js server
+    function updateSrc() {
+
+      // input values
+      resourceKey = document.getElementById('resourceKey').value.trim();
+      resourceRegion = document.getElementById('resourceRegion').value.trim();
+      phrase = document.getElementById('phraseDiv').value.trim();
+      voice = document.querySelector("select").value.trim();
+
+      // server control - by file
+      var serverAudioFileControl = document.getElementById('serverAudioFile');
+      queryString += `%file=true`;
+      const fileQueryString = `file=true&region=${resourceRegion}&key=${resourceKey}&phrase=${phrase}&voice=${voice}`;
+      serverAudioFileControl.src = `${serverSrc}?${fileQueryString}`;
+      serverAudioFileControl.type = "audio/mpeg";
+      serverAudioFileControl.disabled = false;
+
+      // server control - by stream
+      var serverAudioStreamControl = document.getElementById('serverAudioStream');
+      const streamQueryString = `region=${resourceRegion}&key=${resourceKey}&phrase=${phrase}`;
+      serverAudioStreamControl.type = "audio/mpeg";
+      serverAudioStreamControl.disabled = false;
+    }
+
+    function DisplayError(error) {
+      window.alert(JSON.stringify(error));
+    }
+
+    // Initialization
+    document.addEventListener("DOMContentLoaded", function () {
+
+      var clientAudioAzureControl = document.getElementById("clientAudioAzure");
+      var resultDiv = document.getElementById("resultDiv");
+
+      resourceKey = document.getElementById('resourceKey').value;
+      resourceRegion = document.getElementById('resourceRegion').value;
+      phrase = document.getElementById('phraseDiv').value;
+      if (!!window.SpeechSDK) {
+        SpeechSDK = window.SpeechSDK;
+      }
+    });
+
+  </script>
+</body>
+
+</html>
