@@ -24,7 +24,7 @@
       </div>
       <div class="col-md-4">
         <label for="exampleFormControlInput1" class="form-label">Select Voice</label>
-        <select class="form-select" aria-label="Default select example">
+        <select class="form-select" id="voices" aria-label="Default select example">
           <option value="en-AU-NatashaNeural">en-AU-NatashaNeural</option>
               <option value="en-AU-WilliamNeural">en-AU-WilliamNeural</option>
               <option value="en-CA-ClaraNeural">en-CA-ClaraNeural</option>
@@ -68,6 +68,44 @@
         <label for="exampleFormControlInput1" class="form-label">Your Speech Resource Region</label>
         <input class="form-control" id="resourceRegion" type="text" size="40" placeholder="Your resource region" value="eastus"
         >
+      </div>
+      <div class="col-md-4 mt-4">
+        <label for="exampleFormControlInput1" class="form-label">Comma Break time</label>
+        <select class="form-select" id="comma_break" aria-label="Default select example">
+          <option value="100ms">100ms</option>
+              <option value="200ms">200ms</option>
+              <option value="300ms">300ms</option>
+              <option value="400ms">400ms</option>
+              <option value="500ms">500ms</option>
+              <option value="600ms">600ms</option>
+              <option value="600ms">700ms</option>
+              <option value="1000ms">1000ms</option>
+              <option value="1500ms">1500ms</option>
+              <option value="1700ms">1700ms</option>
+              <option value="2000ms">2000ms</option>
+              <option value="2500ms">2500ms</option>
+        </select>
+      </div>
+      <div class="col-md-4 mt-4">
+        <label for="exampleFormControlInput1" class="form-label">Dot Break time</label>
+        <select class="form-select" id="dot_break" aria-label="Default select example">
+          <option value="100ms">100ms</option>
+              <option value="200ms">200ms</option>
+              <option value="300ms">300ms</option>
+              <option value="400ms">400ms</option>
+              <option value="500ms">500ms</option>
+              <option value="600ms">600ms</option>
+              <option value="600ms">700ms</option>
+              <option value="1000ms">1000ms</option>
+              <option value="1500ms">1500ms</option>
+              <option value="1700ms">1700ms</option>
+              <option value="2000ms">2000ms</option>
+              <option value="2500ms">2500ms</option>
+        </select>
+      </div>
+      <div class="col-md-4 mt-4">
+        <label for="customRange3" class="form-label">Speaking speed</label>
+        <input type="range" class="form-range" min="0" max="3" step="0.1" value="1" id="rate">
       </div>
       <div class="col-md-12 mt-4">
         <label for="exampleFormControlTextarea1" class="form-label">Text</label>
@@ -127,12 +165,15 @@
       resourceKey = document.getElementById('resourceKey').value.trim();
       resourceRegion = document.getElementById('resourceRegion').value.trim();
       phrase = document.getElementById('phraseDiv').value.trim();
-      voice = document.querySelector("select").value.trim();
+      voice = document.querySelector("#voices").value.trim();
+      comma_break = document.querySelector("#comma_break").value.trim();
+      dot_break = document.querySelector("#dot_break").value.trim();
+      rate = document.querySelector("#rate").value.trim();
 
       // server control - by file
       var serverAudioFileControl = document.getElementById('serverAudioFile');
       queryString += `%file=true`;
-      const fileQueryString = `file=true&region=${resourceRegion}&key=${resourceKey}&phrase=${phrase}&voice=${voice}`;
+      const fileQueryString = `file=true&region=${resourceRegion}&key=${resourceKey}&phrase=${phrase}&voice=${voice}&comma_break=${comma_break}&dot_break=${dot_break}&rate=${rate}`;
       serverAudioFileControl.src = `${serverSrc}?${fileQueryString}`;
       serverAudioFileControl.type = "audio/mpeg";
       serverAudioFileControl.disabled = false;
